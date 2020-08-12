@@ -1,0 +1,48 @@
+Given a set of candidate numbers (candidates) (without duplicates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
+
+The same repeated number may be chosen from candidates unlimited number of times.
+
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+
+Input: candidates = [2,3,6,7], target = 7
+Output: A solution set is:
+[
+  [7],
+  [2,2,3]
+]
+
+// add >= target 2 2 2 2 = 8
+// found, save to system
+// reduce 2 2 2 
+// add >= target 2 2 2 3 = 9
+// reduce again  2 2 
+// add 2 2 3 3 = 10
+// reduce again 2 
+// add 2 3 3 = 8
+// found save to system
+
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(candidates);
+        bfs(ans, new ArrayList<>(), nums, 0, target);
+        return ans;
+    }
+    
+    private void bfs(List<List<Integer>> ans, List<Integer> list, int[] nums, int init, int remain) {
+      if(remain < 0) {
+        return;
+      } else if(remain == 0) {
+        ans.add(new ArrayList<>(list));
+      } else {
+        for(int i = init; i < nums.length; i++) {
+            list.add(nums[i]);
+            bfs(ans, list, candiates, i, remain - num[i]);
+            list.remove(list.size() - 1);
+            
+        }
+      }
+    }
+}
