@@ -1,0 +1,38 @@
+You are climbing a stair case. It takes n steps to reach to the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+Example 1:
+
+Input: 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+
+
+class Solution {
+    public int climbStairs(int n) {
+        int[] memo = new int[n + 1];
+        
+        return dp(memo, n, 0);
+    }
+    
+    public int dp(int[] memo, int n, int step) {
+      if(n == step) {
+        return 1;
+      } 
+      
+      if(step > n){
+        return 0;
+      }
+      
+      if(memo[step] > 0) {
+        return memo[step];
+      }
+      
+      memo[step] = dp(memo, n, step+1)+ dp(memo, n, step+2);
+      return memo[step];
+    
+    }
+}
