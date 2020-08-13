@@ -1,0 +1,36 @@
+Given a collection of intervals, merge all overlapping intervals.
+
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+
+//dp
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        //base case
+        if(intervals.length <= 1) {
+            return intervals;
+        }
+        
+        //sort in case of out of order 
+        Arrays.sort(intervals, (a,b) -> Integer.compare(a[0], b[0]));
+        
+        List<int[]> result = new ArrayList<>();
+        
+        //dp that updates the merged array
+        int[] newInterval = intervals[0];
+        result.add(newInterval);
+        
+        for(int[] interval : intervals) {
+          //when overlap
+          if(interval[0] <= newInterval[1]) {
+            newInterval[1] = Math.max(interval[1], newInterval[1]);
+          } else {
+            newInterval = interval;
+            result.add(newInterval);
+          }
+        }
+        
+        return result.toArray(new int[result.size()][]);
+    }
+}
