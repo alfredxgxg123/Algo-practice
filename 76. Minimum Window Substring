@@ -1,0 +1,65 @@
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+Example:
+Input: S = "ADOBECODEBANC", T = "ABC"
+Output: "BANC"
+
+Note:
+If there is no such window in S that covers all characters in T, return the empty string "".
+If there is such window, you are guaranteed that there will always be only one unique minimum window in S.
+
+
+//two pointer 
+//reduce the left when find a new one until you update the index 
+class Solution {
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> map = new HashMap<>();
+        
+        //add to dict
+        for(char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        //keep track of length
+        int left = 0;
+        //keep track of min length (right)
+        int minLen = s.length() + 1;
+        //keep track of the string min length left
+        int minLeftIndex = 0;
+        int totalchar = t.length();
+        
+        for(int right = 0; right < s.length(); right++) {
+            char rightChar = s.charAt(right);
+            if(map.containsKey(rightChar)) {
+                map.put(rightChar, map.get(rightChar)-1);
+                
+                //in case of negative duplicate, then total doesnt decrease
+                if(map.get(rightChar) >= 0) {
+                    totalchar--;
+                }
+            }
+            
+            while(totalchar == 0) {
+                //reduce operation by condition 
+                if(right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeftIndex = left;
+                }
+                
+                //move the window to the right; 
+                char leftchar = s.charAt(left);
+                if(map.containsKey(leftchar)) {
+                    map.put(leftchar, map.get(leftchar) + 1);
+                    if(map.get(leftchar) > 0) {
+                        totalchar++;
+                    }
+                }
+                left++;
+            }
+        }
+        
+        if(minLen > s.length()) {
+            return "";
+        }
+        return s.substring(minLeftIndex, minLeftIndex+minLen);
+    }
+}
