@@ -1,0 +1,54 @@
+A message containing letters from A-Z is being encoded to numbers using the following mapping:
+
+'A' -> 1
+'B' -> 2
+...
+'Z' -> 26
+Given a non-empty string containing only digits, determine the total number of ways to decode it.
+
+Example 1:
+
+Input: "12"
+Output: 2
+Explanation: It could be decoded as "AB" (1 2) or "L" (12).
+
+
+class Solution {
+    Map<Integer, Integer> memo = new HashMap<>();
+    public int numDecodings(String s) {
+        if(s.length() == 0 || s == null) return 0;
+        return dp(0, s);
+    }
+    
+    public int dp(int index, String s) {
+        if(index == s.length()){
+            return 1;
+        }
+        
+                
+        if(s.charAt(index) == '0'){
+            return 0;
+        }
+        
+        if(index == s.length() - 1) {
+            return 1;
+        }
+
+        
+        if(memo.containsKey(index)){
+            return memo.get(index);
+        }
+        
+        int ans = dp(index+1, s);
+        
+        if(Integer.parseInt(s.substring(index, index+2)) <= 26) {
+            ans += dp(index+2, s);
+        }
+        
+        memo.put(index, ans);
+        return memo.get(index);
+
+    }
+    
+
+}
