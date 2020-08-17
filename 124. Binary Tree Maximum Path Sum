@@ -3,11 +3,27 @@ Given a non-empty binary tree, find the maximum path sum.
 For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path must contain at least one node and does not need to go through the root.
 
 class Solution {
+    int maxSum = Integer.MIN_VALUE;
     public int maxPathSum(TreeNode root) {
-        int maxSum = Integer.MIN_VALUE;
         
-        return findmaxsum(root, maxSum);;
+        findmaxsum(root);
+        return maxSum;
     }
     
-    public in findmaxsum()
+    public int findmaxsum(TreeNode node) {
+        if(node == null) {
+            return 0;
+        }
+        
+        // to avoid negtaive number so you math.max of 0 
+        //since you are finding the maxsum
+        int left = Math.max(findmaxsum(node.left), 0);
+        int right = Math.max(findmaxsum(node.right), 0);
+
+        int nodevale = node.val + left + right;
+        //update the sum everytime
+        maxSum = Math.max(nodevale, maxSum);
+        // return to the upper level if more than one level 
+        return node.val + Math.max(left, right);
+    }
 }
