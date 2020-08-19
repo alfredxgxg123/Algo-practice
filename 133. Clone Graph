@@ -41,7 +41,46 @@ class Node {
 */
 
 class Solution {
+    Map<Node, Node> visited = new HashMap<>();
+    
     public Node cloneGraph(Node node) {
+        if(node == null) {
+            return node;
+        }
         
+        if(visited.containsKey(node)) {
+            return visited.get(node);
+        }
+        
+        Node cloneNode = new Node(node.val, new ArrayList());
+        visited[node].put(cloneNode);
+        
+        for(Node n : node.neighboors) {
+            cloneNode.neighboors.add(cloneGraph(n));
+        }
+        return cloneNode;
     }
 }
+
+class Solution:
+    def __init__(self):
+        self.visited = {}
+        
+    def cloneGraph(node):
+        if not node:
+            return node
+        if node in self.visited:
+            return visited[node]
+        
+        cloneNode = Node(node.val, [])
+        
+        visited[node] = cloneNode
+        
+        for n in node.neighboors:
+            cloneNode.neighboors.append(cloneGrpah(n))
+            
+        return cloneNode
+        
+        
+        
+        
