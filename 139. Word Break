@@ -1,0 +1,69 @@
+Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+Note:
+
+The same word in the dictionary may be reused multiple times in the segmentation.
+You may assume the dictionary does not contain duplicate words.
+Example 1:
+
+Input: s = "leetcode", wordDict = ["leet", "code"]
+Output: true
+Explanation: Return true because "leetcode" can be segmented as "leet code".
+Example 2:
+
+Input: s = "applepenapple", wordDict = ["apple", "pen"]
+Output: true
+Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
+             Note that you are allowed to reuse a dictionary word.
+             
+             
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        return valid(s, new Set<String> wordDict, 0, new Boolean[] memo);
+    }
+    
+    public boolean valid(String s, Set<String> wordDict, int start, Boolean[] memo) {
+        if(s.length() == start) {
+            return true;
+        }
+        
+        if(memo[start] != null) {
+            return true;
+        }
+        
+        for(int end = start+1; end <= s.length(); end++) {
+            if(wordDict.contains(s.subString(start, end)) && valid(s, wordDict, end, memo)) {
+                return memo[start] = true;
+            }
+        }
+        
+        return memo[start] = false
+        
+    }
+}
+
+
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        memo = {}
+        for i in range(0, len(s)):
+            memo[i] = None
+        return self.valid(s, wordDict, memo, 0)
+        
+    def valid(s, wordDict, memo, start):
+        if start == len(s):
+            return True
+            
+        if memo[start] is not None:
+           return memo[start]
+           
+        begin = start
+        end = start + 1
+        length = len(s) + 1
+        for i in range(end, length):
+            if s[begin, end] in  wordDict and self.valid(s, wordDict, memo, i):
+               memo[begin] = True
+               return memo[begin]
+        memo[begin] = False
+        return memo[begin] = False
