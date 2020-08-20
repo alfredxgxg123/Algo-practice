@@ -30,7 +30,7 @@ class Solution {
                 left = mid + 1;
             }
         }
-        
+        //if will give you left == right
         return nums[left];
     }
 }
