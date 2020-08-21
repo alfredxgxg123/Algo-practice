@@ -2,20 +2,19 @@ class Solution {
     public ListNode reverseBetween(ListNode head, int m, int n) {
         if(head == null) return head;
         
-        ListNode fakehead = new ListNode(-1);
-        fakehead.next = head;
-        ListNode prev = fakehead;
-        ListNode curr = fakehead.next;
+        ListNode prev = null;
+        ListNode curr = head;
         int i = 1;
-        //get to the beginning of the rev and the one before it
+        //get to the node before revsersal
         while(m > i) {
             prev = curr;
             curr = curr.next;
             i++;
         }
         
-        
-        ListNode node = prev;
+        //mark the previous node before revser and the last node 
+        ListNode lastprev = prev;
+        ListNode tail = curr;
         //revser
         while (n >= i) {
             ListNode temp = curr.next;
@@ -25,14 +24,15 @@ class Solution {
             i++;
         }
         
-        //node.next = prev.next which is the tail after revsered then .next == tail
-        //node = [1,2,5]
-        //curr = [5]
-        node.next.next = curr;
-        //point the node bfore rev to the revsered one
-        // prev = [4,3,2,1]
-        node.next = prev;
-        return fakehead.next;
+        
+        //connect the dot
+        if(lastprev != null) {
+            lastprev.next = prev;
+        }
+
+        tail.next = curr;
+        //return prev instead lastprev because it might only have 1 node and prev is the next
+        return lastprev != null ? head : prev;
         
     }
 
