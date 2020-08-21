@@ -1,0 +1,39 @@
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if(head == null) return head;
+        
+        ListNode fakehead = new ListNode(-1);
+        fakehead.next = head;
+        ListNode prev = fakehead;
+        ListNode curr = fakehead.next;
+        int i = 1;
+        //get to the beginning of the rev and the one before it
+        while(m > i) {
+            prev = curr;
+            curr = curr.next;
+            i++;
+        }
+        
+        
+        ListNode node = prev;
+        //revser
+        while (n >= i) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+            i++;
+        }
+        
+        //node.next = prev.next which is the tail after revsered then .next == tail
+        //node = [1,2,5]
+        //curr = [5]
+        node.next.next = curr;
+        //point the node bfore rev to the revsered one
+        // prev = [4,3,2,1]
+        node.next = prev;
+        return fakehead.next;
+        
+    }
+
+}
