@@ -1,0 +1,69 @@
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses-1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+ 
+
+Example 1:
+
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+             
+             
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if(prerequisites == null || prerequisites.length == 0){
+            return true;
+        }
+        //create a map for all the course and its subcoures 
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        int[] inDegree = new int[numCourses];
+        for(int i = 0; i < prerequisites.length; i++) {
+            
+            //record the classes 
+            inDegree[prerequisites[i][0]]++;
+            
+            //record the preq : [classes that you can take]
+            if(map.containsKey(prerequisites[i][1])) {
+                map.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            } else {
+                List<Integer> list = new ArrayList<>();
+                list.add(prerequisites[i][0]);
+                map.put(prerequisites[i][1], list);
+            }
+        }
+        
+        LinkedList<Integer> queue = new LinkedList<>();
+        for(int i = 0; i < numCourses; i++){
+            if(inDegree[i] == 0){
+                queue.offer(i);
+            } 
+        }
+        
+        while(!queue.isEmpty()) {
+            int currentCourse = queue.poll();
+            List<Integer> preqs= map.get(currentCourse);
+            //make sure its not null 
+            for(int i = 0; preqs != null && i < preqs.size(); i++) {
+                //subtract every class 
+                inDegree[preqs.get(i)]--;
+                //when its zero you put it into queue
+                if(inDegree[preqs.get(i)] == 0) {
+                    queue.offer(preqs.get(i));
+                }
+            }
+        }
+        
+        for(int i = 0; i < numCourses; i++) {
+            if(inDegree[i] != 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
