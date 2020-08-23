@@ -1,0 +1,93 @@
+Given a 2D board and a list of words from the dictionary, find all words in the board.
+
+Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+
+ 
+
+Example:
+
+Input: 
+board = [
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+words = ["oath","pea","eat","rain"]
+
+Output: ["eat","oath"]
+
+
+class TrieNode {
+    char val;
+    TrieNode[] children;
+    boolean isWord;
+    
+    public TrieNode(char x) {
+        val = x;
+        children = new TrieNode[26];
+        isWord = false;
+    }
+}
+
+
+class Solution {
+    List<String> result = new ArrayList<>();
+    public List<String> findWords(char[][] board, String[] words) {
+        TrieNode root = new TrieNode(' ');
+        //add all word in words to the trie 
+        for(String word : words) {
+            TrieNode node = root;
+            for(int i = 0; i < word.length(); i++) {
+                char c = word.charAt(i);
+                if(node.children[c-'a'] == null){
+                    node.children[c-'a'] = new TrieNode(c);
+                }
+                node = node.children[c-'a'];
+            }
+            node.isWord = true;
+        }
+        
+        int row = board.length;
+        int col = board[0].length;
+        
+        for(int i = 0; i < row; i++) {
+            for(int j = 0; j < col; j++) {
+                char w = board[i][j];
+                if(root.children[w-'a'] != null){
+                    dfs(i, j, row, col, board, root.children[w-'a'], Character.toString(w));
+                }
+            
+            }
+        }
+    
+        return this.result;
+    }
+
+    void dfs(int i, int j, int row, int col, char[][] board, TrieNode node, String vocab) {
+        if(node.isWord) {
+            result.add(vocab);
+            node.isWord = false;
+        }
+        
+        int[] rowset = {1, -1, 0, 0};
+        int[] colset = {0, 0,  1, -1};
+        char temp = board[i][j];
+        board[i][j] = '1';
+        
+        for(int d = 0; d < 4; d++) {
+            int nrow = i + rowset[d];
+            int ncol = j + colset[d];
+            if(nrow < 0 || ncol < 0 || nrow >= row|| ncol >= col) {
+                continue;
+            }
+            char nextChar = board[nrow][ncol];
+            if(nextChar == '1') continue;
+            if(node.children[nextChar-'a'] != null) {
+                dfs(nrow, ncol, row, col, board, node.children[nextChar-'a'], vocab + nextChar);
+            }   
+        }
+
+        board[i][j] = temp;
+    }
+}
