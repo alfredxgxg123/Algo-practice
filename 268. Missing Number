@@ -1,0 +1,33 @@
+Given an array containing n distinct numbers taken from 0, 1, 2, ..., n, find the one that is missing from the array.
+
+Example 1:
+
+Input: [3,0,1]
+Output: 2
+Example 2:
+
+Input: [9,6,4,2,3,5,7,0,1]
+Output: 8
+
+class Solution {
+    public int missingNumber(int[] nums) {
+        Arrays.sort(nums);
+        
+        //check if n is the last one
+        if(nums.length != nums[nums.length-1]) {
+            return nums.length;
+        }
+        
+        //make sure first one is 0;
+        if(nums[0] != 0) return 0;
+        
+        for(int i = 1; i < nums.length; i++) {
+            if(nums[i]-1 != nums[i-1]) {
+                return nums[i]-1;
+            }
+        }
+        
+        //array was not missing 
+        return -1;
+    }
+}
