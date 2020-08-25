@@ -1,0 +1,67 @@
+Given n nodes labeled from 0 to n-1 and a list of undirected edges (each edge is a pair of nodes), write a function to check whether these edges make up a valid tree.
+
+Example 1:
+
+Input: n = 5, and edges = [[0,1], [0,2], [0,3], [1,4]]
+Output: true
+Example 2:
+
+Input: n = 5, and edges = [[0,1], [1,2], [2,3], [1,3], [1,4]]
+Output: false
+
+
+class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        //make a visited map to connect all the points
+
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            //including the null and []
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        //{0=[1, 2, 3], 1=[0, 4], 2=[0], 3=[0], 4=[1]}
+        // System.out.println(graph);
+    
+        
+        // a vaild tree has to be 
+            //no cycle 
+            //starting from a - b  if b is not parent of a. then it has a cycle
+
+            // one connected component (visted node, after travser if the visited != n) means some nodes are not connected.
+        
+        //dfs
+        // stack first in last out
+        Stack<Integer> stack = new Stack<>();
+        stack.add(0);
+        
+        //visited_with_Parent
+        Map<Integer, Integer> visited = new HashMap<>();
+        visited.put(0, -1);
+        
+        while(!stack.isEmpty()) {
+            int node = stack.pop();
+            for(int adjNode : graph.get(node)){
+                
+                //if its visited, then the adjnode must be parent of node
+                if(visited.get(node) == adjNode) {
+                    continue;
+                }
+                // a cycle if not then cycle
+                if(visited.containsKey(adjNode)) {
+                    return false;
+                }
+
+                visited.put(adjNode, node);
+                stack.push(adjNode);
+            }
+            
+        }
+        
+        return visited.size() == n;
+        //then check the tree / how?
+    }
+}
