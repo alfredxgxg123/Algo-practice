@@ -26,30 +26,37 @@ P     I
 
 class Solution {
     public String convert(String s, int numRows) {
+        //check length base case numRows  == 1 no need to covert
         if(numRows == 1) return s;
-        
+        // creat the stringbuilder array 
         List<StringBuilder> rows = new ArrayList<>();
         
         
-        //create the rows;
-        for(int i = 0; i < Math.min(numRows, s.length()); i++) {
+        //make sure no empty rows
+        for(int i = 0; i < Math.min(s.length(), numRows); i++) {
             rows.add(new StringBuilder());
         }
         
-        int curRow = 0;
-        boolean goingDown = false;
-        
+        int index = 0;
+        Boolean goingDown = false;
+        //go up and down
         for(char c : s.toCharArray()) {
-            rows.get(curRow).append(c);
-            if(curRow == 00 || curRow == numRows - 1) {
+            rows.get(index).append(c);
+            if(index == 0 || index == numRows - 1) {
                 goingDown = !goingDown;
             }
-            curRow += goingDown ? 1 : -1;
+            
+            index += goingDown ? 1 : -1;
         }
         
-        StringBuilder result = new StringBuilder();
+        StringBuilder  str = new StringBuilder();
+        for(StringBuilder row : rows) {
+            str.append(row);
+        }
         
-        for(StringBuilder row : rows) result.append(row);
-        return result.toString();
+        return str.toString();
+        
+        
+        //combine the array to string 
     }
 }
