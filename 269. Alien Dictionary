@@ -113,6 +113,7 @@ class Solution {
                 
                 // corner case where ["abc", "ab"] should return "" instead of "abc"
                 //if ab then abc you should return abc
+                // wait till you get to last one first in case ther might be a difference
                 if (j + 1 == len && first.length() > second.length()) {
                     graph.clear();
                     return;
