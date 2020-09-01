@@ -1,3 +1,4 @@
+Share
 There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of non-empty words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
 
 Example 1:
@@ -32,6 +33,135 @@ Input:
 
 Output: "" 
 
+
+
+Input:
+[
+  "abc",
+  "ab",
+] 
+
+Output: "" 
+
+Input:
+[
+  "ab",
+  "abc",
+] 
+
+Output: "abc" 
+
 Explanation: The order is invalid, so return "".
 
+
+class Solution {
+    public String alienOrder(String[] words) {
+        
+        //keep track of the level order
+        int[] indegree = new int[26];
+        
+        
+        //Create graph
+        Map<Character, Set<Character>> graph = new HashMap<>();
+        buildGraph(graph, words, indegree);
+        
+        
+        //work on the bfs treversal to return the order
+        return bfs(graph, indegree);
+    }
+    
+    
+    private void buildGraph(Map<Character, Set<Character>> graph, String[] words, int[] indegree) {
+        // only check the first different of two word, then put the word in the order 
+        
+        //store all the characters in the key
+        //make sure its CharArray() 
+        for(String word: words) {
+            
+            for(char c : word.toCharArray()) {
+                graph.putIfAbsent(c, new HashSet<>());
+            }
+            
+        }
+        
+        //compare it with the last one
+        for(int i = 1; i  < words.length; i++) {
+            String first = words[i - 1];
+            String second = words[i];
+            
+            //get the shorter one in case of null 
+            int len = Math.min(first.length(), second.length());
+            
+            for(int j = 0; j < len; j++) {
+                //find the first different one
+                char key = first.charAt(j);
+                char value = second.charAt(j);
+                if(key != value) {
+
+                    
+                    if(!graph.get(key).contains(value)) {
+                        //store the order 
+                        graph.get(key).add(value);
+                        
+                        //update indegree of the value 
+                        indegree[value -'a']++;
+                    }
+                    
+                    // only update the first order
+                    break;
+                }
+                
+                // corner case where ["abc", "ab"] should return "" instead of "abc"
+                //if ab then abc you should return abc
+                if (j + 1 == len && first.length() > second.length()) {
+                    graph.clear();
+                    return;
+                }
+            }
+        }
+    }
+    
+    //to pring out the string in order by the indegree
+    private String bfs(Map<Character, Set<Character>> graph, int[] indegree) {
+        //make a stringbuilder to create a string
+        
+
+        StringBuilder sb = new StringBuilder();
+        
+        int totalChar = graph.size();
+        
+        //make a queue for the bfs
+        Queue<Character> queue = new LinkedList<>();
+        
+        //store the zero ones in the indegre first
+        for(char c : graph.keySet()) {
+            if(indegree[c-'a'] == 0) {
+                //graph insertion is already in order because of the indegree because only the parent one will apear once
+                //append the parent ones first
+                sb.append(c);
+                //put it in queue
+                queue.offer(c);
+            }
+        }
+        
+        while(!queue.isEmpty()) {
+            char key = queue.poll();
+            
+            //make sure there is val for this key
+            if(graph.get(key) == null || graph.get(key).size() == 0) continue;
+            
+            //go down to the next level;
+            for(char val : graph.get(key)) {
+                indegree[val-'a']--;
+                
+                if(indegree[val-'a'] == 0) {
+                    sb.append(val);
+                    queue.offer(val);
+                }
+            }
+        }
+        
+        return sb.length() == totalChar ? sb.toString() : "";
+    }
+}
 
