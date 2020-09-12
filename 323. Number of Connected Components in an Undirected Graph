@@ -1,0 +1,66 @@
+Given n nodes labeled from 0 to n - 1 and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.
+
+Example 1:
+
+Input: n = 5 and edges = [[0, 1], [1, 2], [3, 4]]
+
+     0          3
+     |          |
+     1 --- 2    4 
+
+Output: 2
+Example 2:
+
+Input: n = 5 and edges = [[0, 1], [1, 2], [2, 3], [3, 4]]
+
+     0           4
+     |           |
+     1 --- 2 --- 3
+
+Output:  1
+
+class Solution {
+    public int countComponents(int n, int[][] edges) {
+        int ans = 0;
+        //make an graph map
+        
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        
+        
+        for(int i = 0; i < n ; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        
+        //store all the things in graph 
+        for(int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        
+        
+        //loop til the end but keep trakc by visted
+        
+        Set<Integer> visited = new HashSet<>();        
+
+        
+        for(int i = 0; i < n; i++) {
+            
+            //if i am able to add that means i can keep going
+            if(visited.add(i)) {
+                dfsloop(visited, graph, i);
+                ans++;
+            }
+        }
+        return ans;
+    }
+    
+    public void dfsloop(Set<Integer> visited, Map<Integer, List<Integer>> graph, Integer i) {
+        //loop its negib
+        
+        for(int n : graph.get(i)) {
+            if(visited.add(n)) {
+                dfsloop(visited, graph, n);
+            }
+        }
+    }
+}
