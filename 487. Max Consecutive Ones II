@@ -1,0 +1,40 @@
+Given a binary array, find the maximum number of consecutive 1s in this array if you can flip at most one 0.
+
+Example 1:
+Input: [1,0,1,1,0]
+Output: 4
+Explanation: Flip the first zero will get the the maximum number of consecutive 1s.
+    After flipping, the maximum number of consecutive 1s is 4.
+
+
+// Output: 4
+// Explanation: Flip the first zero will get the the maximum number of consecutive 1s.
+//     After flipping, the maximum number of consecutive 1s is 4.
+    
+class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int len = 0;
+        int zero = 0;
+        int count = 1;
+        int tempindex= 0;
+        
+        for(int i = 0; i < nums.length; i++) {
+            
+            //count the zeros 
+            if(nums[i] == 0) {
+                zero++;
+            }
+            
+            //when there are more than 1 zero
+            //use two zeros position as two pointers !!!!!!!!!!!!!!!
+            while(zero > count) {
+                if(nums[tempindex] == 0) {
+                    zero--; 
+                }
+                  tempindex++;
+            }
+            len = Math.max(i-tempindex+1, len);
+        }
+        return len;
+    }
+}
