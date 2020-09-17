@@ -1,0 +1,55 @@
+
+Given a matrix of M x N elements (M rows, N columns), return all elements of the matrix in diagonal order as shown in the below image.
+Example:
+
+Input:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+
+Output:  [1,2,4,7,5,3,6,8,9]\
+
+
+class Solution {
+    public int[] findDiagonalOrder(int[][] matrix) {
+        // m + n is the diagonal
+        
+        if(matrix.length == 0 || matrix[0].length == 0) {
+            return new int[0];
+        }
+        
+        int n = matrix.length;
+        int m = matrix[0].length;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                if(map.containsKey(i+j)) {
+                    map.get(i+j).add(matrix[i][j]);
+                } else {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(matrix[i][j]);
+                    map.put(i+j, list);
+                };
+            }
+        }
+        
+        List<Integer> ans =new ArrayList<>();
+        for(Map.Entry<Integer, List<Integer>> entry : map.entrySet()) {
+            if(entry.getKey() % 2 == 0) {
+                Collections.reverse(entry.getValue());
+            }
+            for(int x : entry.getValue()) {
+                ans.add(x);
+            }
+        }
+        
+        int[] x = new int[n*m];
+        for(int i = 0; i < ans.size(); i++) {
+            x[i] = ans.get(i);
+        }
+        return x;
+    
+    }
+}
